@@ -1,5 +1,5 @@
 //data
-import question from '../data/question'
+import data from '../data/data'
 
 import yellowBallon from '../assets/yellowBallon.png';
 
@@ -12,11 +12,26 @@ export default function MainPage(props){
     props.setFrontPage(prev=>!prev)
   }
 
+  const firstQues = {
+    question: "According to Overwatch's lore, who was once a member of the Deadlock Gang?",
+    correct_answer: "McCree",
+    incorrect_answers: ["Roadhog", "Soldier 76", "Junkrat"]
+  }
+
   return(
     <>
-      <img src={yellowBallon} className='top-yellow-blob' alt="yellow blob" />
-      <img src={yellowBallon} className='bot-yellow-blob' alt="yellow blob" />
-      <button onClick={handleClick}>Want to get back?</button>
+      <main>
+        <section > {/* this is for background images */}
+          <img src={yellowBallon} className='top-yellow-blob' alt="yellow blob" />
+          <img src={yellowBallon} className='bot-yellow-blob' alt="yellow blob" />
+          <button onClick={handleClick}>Want to get back?</button>
+        </section>
+
+        <section>
+
+        </section>
+
+      </main>
     </>
   )
 }

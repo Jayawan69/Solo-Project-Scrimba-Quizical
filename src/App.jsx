@@ -4,13 +4,14 @@ import {useState, useEffect, useRef} from 'react'
 //components
 import FirstPage from './Components/FirstPage'
 import MainPage from './Components/MainPage'
+import Question from './Components/Question'
 
 
 
 
 export default function App(){
 
-   const [frontPage, setFrontPage] = useState(true)
+   const [frontPage, setFrontPage] = useState(false)
 
    function startQuizBtn(){
       setFrontPage(prev=>!prev)
@@ -33,8 +34,12 @@ export default function App(){
    if(frontPage){
       htmlToReturn = <FirstPage startQuizBtn={startQuizBtn}/>
    }else{
-      htmlToReturn = <MainPage setFrontPage={setFrontPage}/>
+      htmlToReturn = 
+         <>
+            <Question/>
+            <MainPage setFrontPage={setFrontPage}/>
+         </>
    }
-   
+
    return htmlToReturn
 }

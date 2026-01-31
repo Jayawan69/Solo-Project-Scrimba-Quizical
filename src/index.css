@@ -76,6 +76,8 @@ body{
   font-family: Inter, sans-serif;
   background-color: #F5F7FB;
   position: relative;
+  margin: 50px;
+  min-height: 100vh;
 }
 
 div#root{
@@ -83,21 +85,21 @@ div#root{
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 .top-yellow-blob{
   width: 800px;
-  position: fixed;
   opacity: 0.25;
+  position: fixed;
   top:-500px;
   right:-350px;
 }
 
 .bot-yellow-blob{
   width: 800px;
-  position: fixed;
   opacity: 0.15;
+  position: fixed;
   bottom:-500px;
   left:-350px; 
   filter: invert(55%) sepia(100%) saturate(5000%) hue-rotate(180deg);
@@ -124,11 +126,37 @@ div#root{
   transition: all 0.15s ease
 }
 .start-btn:hover{
-  background-color: darkblue; /* changes when mouse is over */
+  background-color: darkblue; 
   cursor: pointer;
 }
 
 .start-btn:active{
-  background-color: navy;  /* darker when pressed */
+  background-color: navy;  
   transform: scale(0.95);
+}
+
+legend{
+  margin: 20px 0;
+  color: #293264;
+}
+
+fieldset {
+  border: none;
+  height: 100px;     
+  margin-top: 15px;        
+  padding: 0;  
+  border-bottom: 1px solid #DBDEF0;     
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+label{
+  padding: 5px 10px;
+  border: 1px solid #293264;
+  color: #293264;
+  margin: 30px 10px;
+  border-radius: 10px;
+  font-size: 0.9rem;
 }
