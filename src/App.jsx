@@ -1,6 +1,40 @@
 import {useState, useEffect, useRef} from 'react'
 
 
+//components
+import FirstPage from './Components/FirstPage'
+import MainPage from './Components/MainPage'
+
+
+
+
 export default function App(){
-  return <h1>Hello bro</h1>
+
+   const [frontPage, setFrontPage] = useState(true)
+
+   function startQuizBtn(){
+      setFrontPage(prev=>!prev)
+   }
+
+   let htmlToReturn = ''
+
+   // useEffect(() => {
+   // fetch('https://opentdb.com/api.php?amount=10')
+   //    .then(res => res.json())
+   //    .then(data => console.log(data));
+   // }, []);
+
+
+
+
+
+
+   
+   if(frontPage){
+      htmlToReturn = <FirstPage startQuizBtn={startQuizBtn}/>
+   }else{
+      htmlToReturn = <MainPage setFrontPage={setFrontPage}/>
+   }
+   
+   return htmlToReturn
 }
