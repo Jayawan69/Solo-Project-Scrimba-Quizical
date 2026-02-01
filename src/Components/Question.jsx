@@ -44,11 +44,15 @@ export default function Question (props){
                // console.log(props.userAnswers[`question-${i+1}`]) 
                
                if(numQuestAttempted>0){
-                     if(props.userAnswers[`question-${i+1}`] === data[i].correct_answer && ans ===props.userAnswers[`question-${i+1}`]){
-                        className = 'correct' 
-                        console.log('Correct class added')
+                     if( ans ===props.userAnswers[`question-${i+1}`]){
+                        if(props.userAnswers[`question-${i+1}`] === data[i].correct_answer){
+                           className = 'correct' 
+                           console.log('Correct class added')
+                        }else{
+                           className+=' wrong'
+                        }
                      }
-                     
+                        
                      // console.log(`Number of question attempted: ${numQuestAttempted}`)
 
 

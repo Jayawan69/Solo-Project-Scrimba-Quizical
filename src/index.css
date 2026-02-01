@@ -191,6 +191,7 @@ label:has(input:checked) {
 
 label.wrong{
   background-color: red;
+  color: white;
 }
 
 label.correct{
