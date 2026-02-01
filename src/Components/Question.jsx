@@ -1,12 +1,17 @@
-
+import {useState, useEffect} from 'react'
 import data from '../data/data'
 
 export default function Question (props){
+
+   let numOfCorrect = 0
+
+   const [isSubmitted, setIsSubmitted] = useState(false)
   
     function submit(event) {
       event.preventDefault()
       const formEl = event.currentTarget
       const formData = new FormData(formEl)
+      setIsSubmitted(true)
       props.setUserAnswers(Object.fromEntries(formData.entries()))
       // console.log(props.userAnswers)
       formEl.reset()
@@ -22,10 +27,17 @@ export default function Question (props){
 
       let shuffledOption = []
 
-      while (allOptions.length){
-         const randPos = Math.floor(Math.random() * allOptions.length)
-         shuffledOption = [...shuffledOption, allOptions.splice(randPos, 1)[0]]
+
+      if(!isSubmitted){
+         while (allOptions.length){
+            const randPos = Math.floor(Math.random() * allOptions.length)
+            shuffledOption = [...shuffledOption, allOptions.splice(randPos, 1)[0]]
+         }
+      }else{
+         shuffledOption = allOptions
       }
+
+      
 
       // console.log(shuffledOption)
    
@@ -43,11 +55,15 @@ export default function Question (props){
                // console.log(props.userAnswers)
                // console.log(props.userAnswers[`question-${i+1}`]) 
                
+               
+
                if(numQuestAttempted>0){
-                     if( ans ===props.userAnswers[`question-${i+1}`]){
+                     if(ans ===props.userAnswers[`question-${i+1}`]){
                         if(props.userAnswers[`question-${i+1}`] === data[i].correct_answer){
                            className = 'correct' 
-                           console.log('Correct class added')
+                           numOfCorrect+=1
+
+                           console.log('Correct class added', `Correct answer=:${numOfCorrect}`)
                         }else{
                            className+=' wrong'
                         }
@@ -81,6 +97,8 @@ export default function Question (props){
       <form onSubmit={submit} >
 
         {fieldHtml} 
+
+        {isSubmitted && <p className="final-score">Great effort! You got {numOfCorrect}/{data.length} questions right.</p>}
         <button type="submit" className='submit-btn'>Check Answer</button>
         
       </form>

@@ -198,3 +198,10 @@ label.correct{
   background-color: green;
   color: white;
 }
+
+.final-score{
+  margin:10px auto 0 auto;
+  color: #293264;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
