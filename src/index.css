@@ -175,9 +175,6 @@ label{
   /* width: 100%; */
 }
 
-label:has(input:checked) {
-  background-color: #D6DBF5;
-}
 
 .submit-btn{
   padding: 15px 30px;
@@ -186,4 +183,17 @@ label:has(input:checked) {
   background-color: #4D5B9E;
   color: #F5F7FB;
   margin: 40px auto;
+}
+
+label:has(input:checked) {
+  background-color: #D6DBF5;
+}
+
+label.wrong{
+  background-color: red;
+}
+
+label.correct{
+  background-color: green;
+  color: white;
 }

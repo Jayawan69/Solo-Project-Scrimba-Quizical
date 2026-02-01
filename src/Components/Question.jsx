@@ -8,7 +8,7 @@ export default function Question (props){
       const formEl = event.currentTarget
       const formData = new FormData(formEl)
       props.setUserAnswers(Object.fromEntries(formData.entries()))
-
+      // console.log(props.userAnswers)
       formEl.reset()
   }
 
@@ -25,22 +25,45 @@ export default function Question (props){
       while (allOptions.length){
          const randPos = Math.floor(Math.random() * allOptions.length)
          shuffledOption = [...shuffledOption, allOptions.splice(randPos, 1)[0]]
-      } 
+      }
 
       // console.log(shuffledOption)
    
       return(
          <fieldset key={i}>
                <legend>
-                  {ques.category}
+                  {ques.question}
                </legend>
 
-               {shuffledOption.map((ans, index)=>(
-                  <label >
-                     <input value ={ans} type="radio" name={`question-${i+1}`}/>
-                     {ans}
-                  </label>
-               ))}
+               {shuffledOption.map((ans, index)=>{
+               const numQuestAttempted = Object.keys(props.userAnswers).length
+
+               let className = ''
+
+               // console.log(props.userAnswers)
+               // console.log(props.userAnswers[`question-${i+1}`]) 
+               
+               if(numQuestAttempted>0){
+                     if(props.userAnswers[`question-${i+1}`] === data[i].correct_answer && ans ===props.userAnswers[`question-${i+1}`]){
+                        className = 'correct' 
+                        console.log('Correct class added')
+                     }
+                     
+                     // console.log(`Number of question attempted: ${numQuestAttempted}`)
+
+
+                  }else{
+                     console.log(`None of the question attempted`)
+                     className = ''
+                  }
+                  
+
+                  return(
+                     <label className={className}>
+                        <input value ={ans} type="radio" name={`question-${i+1}`}/>
+                        {ans}
+                     </label>
+               )})}
                <br />
             </fieldset>
          )

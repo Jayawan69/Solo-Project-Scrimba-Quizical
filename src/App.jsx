@@ -39,7 +39,7 @@ export default function App(){
    }else{
       htmlToReturn = 
          <main>
-            <Question setUserAnswers={setUserAnswers}/>
+            <Question userAnswers={userAnswers} setUserAnswers={setUserAnswers} />
             <MainPage setFrontPage={setFrontPage}/>
          </main>
    }
