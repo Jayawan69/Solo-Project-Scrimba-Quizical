@@ -3,9 +3,13 @@ import data from '../data/data'
 
 export default function Question (props){
   
-    function submit(formData) {
-    console.log(email)
-    console.log(formData)
+    function submit(event) {
+      event.preventDefault()
+      const formEl = event.currentTarget
+      const formData = new FormData(formEl)
+      props.setUserAnswers(Object.fromEntries(formData.entries()))
+
+      formEl.reset()
   }
 
 
@@ -33,7 +37,7 @@ export default function Question (props){
 
                {shuffledOption.map((ans, index)=>(
                   <label >
-                     <input type="radio" name={`question${i}`}/>
+                     <input value ={ans} type="radio" name={`question-${i+1}`}/>
                      {ans}
                   </label>
                ))}
@@ -43,14 +47,14 @@ export default function Question (props){
       }
    )
 
-   console.log(fieldHtml)
+   // console.log(fieldHtml)
   
   return (
     <section>
-      <form action={submit} >
+      <form onSubmit={submit} >
 
         {fieldHtml} 
-        <button>Submit</button>
+        <button type="submit" className='submit-btn'>Check Answer</button>
         
       </form>
     </section>

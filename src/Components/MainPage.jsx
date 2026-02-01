@@ -20,7 +20,6 @@ export default function MainPage(props){
 
   return(
     <>
-      <main>
         <section > {/* this is for background images */}
           <img src={yellowBallon} className='top-yellow-blob' alt="yellow blob" />
           <img src={yellowBallon} className='bot-yellow-blob' alt="yellow blob" />
@@ -31,7 +30,6 @@ export default function MainPage(props){
 
         </section>
 
-      </main>
     </>
   )
 }
