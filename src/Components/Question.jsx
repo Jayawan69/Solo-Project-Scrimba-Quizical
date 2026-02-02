@@ -6,6 +6,14 @@ export default function Question (props){
    let numOfCorrect = 0
 
    const [isSubmitted, setIsSubmitted] = useState(false)
+   const [optionsArr] = useState(() => {
+    return data.map((ques) => {
+      const randNum = Math.floor(Math.random() * (ques.incorrect_answers.length + 1));
+      const shuffled = [...ques.incorrect_answers];
+      shuffled.splice(randNum, 0, ques.correct_answer);
+      return shuffled;
+    });
+  });
   
     function submit(event) {
       event.preventDefault()
@@ -18,25 +26,40 @@ export default function Question (props){
   }
 
 
+   // useEffect(()=>{
+   //    setOptionsArr(data.map((ques, i)=>{
+   //         const randNum = Math.floor(Math.random() * (ques.incorrect_answers.length+1))
+   //         console.log(randNum)
+   //         return [...ques.incorrect_answers.slice(0,randNum), ques.correct_answer, ...ques.incorrect_answers.slice(randNum)]
+  
+   //      }))
+   // },[])
+   console.log(optionsArr)
+
+
+
+
+
 
   const fieldHtml = data.map((ques, i)=>{
 
-      const allOptions = [...ques.incorrect_answers, ques.correct_answer]
+      // const allOptions = [...ques.incorrect_answers, ques.correct_answer]
+
 
       // console.log(allOptions)
 
-      let shuffledOption = []
+      
+      // let tempOptions = []
 
-
-      if(!isSubmitted){
-         while (allOptions.length){
-            const randPos = Math.floor(Math.random() * allOptions.length)
-            shuffledOption = [...shuffledOption, allOptions.splice(randPos, 1)[0]]
-         }
-      }else{
-         shuffledOption = allOptions
-      }
-
+      // if(!isSubmitted){
+      //    while (allOptions.length){
+      //       const randPos = Math.floor(Math.random() * allOptions.length)
+      //       tempOptions = [...shuffledOption, allOptions.splice(randPos, 1)[0]]
+      //    }
+      //    setShuffledOption(tempOptions)
+      // }
+      
+      const shuffledOption = optionsArr[i] // No shuffling happens
       
 
       // console.log(shuffledOption)
@@ -58,12 +81,13 @@ export default function Question (props){
                
 
                if(numQuestAttempted>0){
-                     if(ans ===props.userAnswers[`question-${i+1}`]){
+                     if(ans === props.userAnswers[`question-${i+1}`]){
+                        // className += 'wrong' 
                         if(props.userAnswers[`question-${i+1}`] === data[i].correct_answer){
-                           className = 'correct' 
+                           className += ' correct' 
                            numOfCorrect+=1
 
-                           console.log('Correct class added', `Correct answer=:${numOfCorrect}`)
+                           // console.log('Correct class added', `Correct answer=:${numOfCorrect}`)
                         }else{
                            className+=' wrong'
                         }
@@ -75,6 +99,9 @@ export default function Question (props){
                   }else{
                      console.log(`None of the question attempted`)
                      className = ''
+                  }
+                  if(isSubmitted){
+                     className += ' disabled'
                   }
                   
 
@@ -96,12 +123,19 @@ export default function Question (props){
     <section>
       <form onSubmit={submit} >
 
-        {fieldHtml} 
+         {fieldHtml} 
 
-        {isSubmitted && <p className="final-score">Great effort! You got {numOfCorrect}/{data.length} questions right.</p>}
-        <button type="submit" className='submit-btn'>Check Answer</button>
+         <p 
+            className="final-score"
+            style={{ visibility: isSubmitted ? 'visible' : 'hidden' }}
+            >
+            Great effort! You got {numOfCorrect}/{data.length} questions right.
+         </p>
+
+         {isSubmitted ? <button type ='button'className='submit-btn'>Play Again</button> : <button type="submit" className='submit-btn'>Check Answer</button>}
+        
         
       </form>
     </section>
   )
- }
+}

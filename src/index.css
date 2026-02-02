@@ -189,15 +189,28 @@ label:has(input:checked) {
   background-color: #D6DBF5;
 }
 
+.disabled{
+  user-select: none;
+  opacity: 0.7;
+  pointer-events: none;
+  cursor: default; 
+}
+
 label.wrong{
-  background-color: red;
-  color: white;
+  background-color: #F8BCBC;
+  color: #293264;
+  border: none;
+  opacity: 1;
+  
 }
 
 label.correct{
-  background-color: green;
-  color: white;
+  background-color: #94D7A2;
+  color: #293264;
+  border: none;
+  opacity: 1;
 }
+
 
 .final-score{
   margin:10px auto 0 auto;
