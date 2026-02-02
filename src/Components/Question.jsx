@@ -1,165 +1,114 @@
-import {useState, useEffect} from 'react'
-import data from '../data/data'
+import { useState, useEffect } from 'react'
+import { getQuizData } from '../data/data'
 
-export default function Question (props){
+export default function Question(props) {
+    const [data, setData] = useState([])
+    const [optionsArr, setOptionsArr] = useState([])
+    let numOfCorrect = 0
 
-   let numOfCorrect = 0
+    useEffect(() => {
+        getQuizData().then(apiResponse => {
+            setData(apiResponse)
+            const shuffledResults = apiResponse.map((ques) => {
+                const randNum = Math.floor(Math.random() * (ques.incorrect_answers.length + 1))
+                const shuffled = [...ques.incorrect_answers]
+                shuffled.splice(randNum, 0, ques.correct_answer)
+                return shuffled
+            })
+            setOptionsArr(shuffledResults)
+        })
+    }, [])
 
-   // const [isSubmitted, setIsSubmitted] = useState(false)
-   const [optionsArr] = useState(() => {
-    return data.map((ques) => {
-      const randNum = Math.floor(Math.random() * (ques.incorrect_answers.length + 1));
-      const shuffled = [...ques.incorrect_answers];
-      shuffled.splice(randNum, 0, ques.correct_answer);
-      return shuffled;
-    });
-  });
-  
     function submit(event) {
-      event.preventDefault()
-      const formEl = event.currentTarget
-      const formData = new FormData(formEl)
-      props.setIsSubmitted(true)
-      props.setUserAnswers(Object.fromEntries(formData.entries()))
-      // console.log(props.userAnswers)
-      // formEl.reset()
-  }
+        event.preventDefault()
+        const formEl = event.currentTarget
+        const formData = new FormData(formEl)
+        props.setIsSubmitted(true)
+        props.setUserAnswers(Object.fromEntries(formData.entries()))
+    }
 
-  function resetQuiz() {
-    // 1. Tell the parent to clear the answers
-    props.setUserAnswers({}); 
+    // Guard: Prevent the map from running if arrays aren't ready
+    if (data.length === 0 || optionsArr.length === 0) {
+        return <h1 className="loading">Loading Quiz...</h1>
+    }
 
-    console.log('Quiz reseting')
-    
-    // 2. Set submitted to false
-    props.setIsSubmitted(false);
-    
-    // 3. (Optional) If you want new random positions for answers, 
-    // you would need a setOptionsArr state setter, but for now:
-    // This will at least clear the UI.
-}
+    const fieldHtml = data.map((ques, i) => {
+        const shuffledOption = optionsArr[i]
 
+        return (
+            <fieldset key={i}>
+                <legend>{ques.question}</legend>
 
-   // useEffect(()=>{
-   //    setOptionsArr(data.map((ques, i)=>{
-   //         const randNum = Math.floor(Math.random() * (ques.incorrect_answers.length+1))
-   //         console.log(randNum)
-   //         return [...ques.incorrect_answers.slice(0,randNum), ques.correct_answer, ...ques.incorrect_answers.slice(randNum)]
-  
-   //      }))
-   // },[])
-   console.log(optionsArr)
+                {shuffledOption.map((ans, index) => {
+                    const numQuestAttempted = Object.keys(props.userAnswers).length
+                    let className = []
 
-
-
-
-
-
-  const fieldHtml = data.map((ques, i)=>{
-
-      // const allOptions = [...ques.incorrect_answers, ques.correct_answer]
-
-
-      // console.log(allOptions)
-
-      
-      // let tempOptions = []
-
-      // if(!isSubmitted){
-      //    while (allOptions.length){
-      //       const randPos = Math.floor(Math.random() * allOptions.length)
-      //       tempOptions = [...shuffledOption, allOptions.splice(randPos, 1)[0]]
-      //    }
-      //    setShuffledOption(tempOptions)
-      // }
-      
-      const shuffledOption = optionsArr[i] // No shuffling happens
-      
-
-      // console.log(shuffledOption)
-   
-      return(
-         <fieldset key={i}>
-               <legend>
-                  {ques.question}
-               </legend>
-
-               {shuffledOption.map((ans, index)=>{
-               const numQuestAttempted = Object.keys(props.userAnswers).length
-
-               let className = []
-
-               // console.log(props.userAnswers)
-               // console.log(props.userAnswers[`question-${i+1}`]) 
-               
-               
-
-               if(numQuestAttempted>0){
-                     if(ans === props.userAnswers[`question-${i+1}`]){
-                        // className += 'wrong' 
-                        if(props.userAnswers[`question-${i+1}`] === data[i].correct_answer){
-                           className.push('correct')
-                           numOfCorrect+=1
-
-                           // console.log('Correct class added', `Correct answer=:${numOfCorrect}`)
-                        }else{
-                           className.push("wrong")
-                        }
-                     }
+                    // logic for marking answers after submission
+                    if (numQuestAttempted > 0 || props.isSubmitted) {
+                        const selectedAnswer = props.userAnswers[`question-${i + 1}`]
                         
-                     // console.log(`Number of question attempted: ${numQuestAttempted}`)
+                        if (ans === selectedAnswer) {
+                            if (ans === ques.correct_answer) {
+                                className.push('correct')
+                                numOfCorrect += 1
+                            } else {
+                                className.push('wrong')
+                            }
+                        }
+                        
+                        // Highlight the correct answer even if the user didn't pick it
+                        if (props.isSubmitted && ans === ques.correct_answer) {
+                            className.push('correct')
+                        }
+                    }
 
+                    if (props.isSubmitted) {
+                        className.push("disabled")
+                    }
 
-                  }else{
-                     console.log(`None of the question attempted`)
-                     // className = ''
-                  }
-                  if(props.isSubmitted){
-                     className.push("disabled")
-                  }
-                  
-
-                  return(
-                     <label className={className.join(' ')}>
-                        <input value ={ans} type="radio" name={`question-${i+1}`}/>
-                        {ans}
-                     </label>
-               )})}
-               <br />
+                    return (
+                        <label key={index} className={className.join(' ')}>
+                            <input 
+                                value={ans} 
+                                type="radio" 
+                                name={`question-${i + 1}`} 
+                                disabled={props.isSubmitted}
+                            />
+                            {ans}
+                        </label>
+                    )
+                })}
+                <br />
             </fieldset>
-         )
-      }
-   )
+        )
+    })
 
-  
-  return (
-    <section>
-      <form onSubmit={submit} >
+    return (
+        <section>
+            <form onSubmit={submit}>
+                {fieldHtml}
 
-         {fieldHtml} 
+                <p 
+                    className="final-score"
+                    style={{ visibility: props.isSubmitted ? 'visible' : 'hidden' }}
+                >
+                    Great effort! You got {numOfCorrect}/{data.length} questions right.
+                </p>
 
-         <p 
-            className="final-score"
-            style={{ visibility: props.isSubmitted ? 'visible' : 'hidden' }}
-            >
-            Great effort! You got {numOfCorrect}/{data.length} questions right.
-         </p>
-
-         {props.isSubmitted ? (
-            <button 
-               type='button' 
-               className='submit-btn' 
-               onClick={props.playAgain}
-            >
-               Play Again
-            </button>
-         ) : (
-            <button type="submit" className='submit-btn'>
-               Check Answer
-            </button>
-         )}
-        
-      </form>
-    </section>
-  )
+                {props.isSubmitted ? (
+                    <button 
+                        type='button' 
+                        className='submit-btn' 
+                        onClick={props.playAgain}
+                    >
+                        Play Again
+                    </button>
+                ) : (
+                    <button type="submit" className='submit-btn'>
+                        Check Answer
+                    </button>
+                )}
+            </form>
+        </section>
+    )
 }

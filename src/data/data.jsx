@@ -1,4 +1,4 @@
-const question =  [
+/* const question =  [
   {
     category: "Entertainment: Cartoon & Animations",
     type: "boolean",
@@ -81,4 +81,20 @@ const question =  [
   }
 ]
 
-export default question
+export default question */
+
+export async function getQuizData() {
+  try {
+    const response = await fetch("https://opentdb.com/api.php?amount=10&type=multiple");
+    if (!response.ok) throw new Error("Failed to fetch");
+
+    console.log("FETCH TRIGGERED!");
+    
+    const result = await response.json();
+    return result.results; // This is the array of 10 questions
+    console.log(result);
+  } catch (error) {
+    console.error("Error loading quiz:", error);
+    return []; 
+  }
+}

@@ -1,5 +1,4 @@
 //data
-import data from '../data/data'
 
 import yellowBallon from '../assets/yellowBallon.png';
 
