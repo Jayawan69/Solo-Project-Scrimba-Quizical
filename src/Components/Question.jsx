@@ -5,7 +5,7 @@ export default function Question (props){
 
    let numOfCorrect = 0
 
-   const [isSubmitted, setIsSubmitted] = useState(false)
+   // const [isSubmitted, setIsSubmitted] = useState(false)
    const [optionsArr] = useState(() => {
     return data.map((ques) => {
       const randNum = Math.floor(Math.random() * (ques.incorrect_answers.length + 1));
@@ -19,11 +19,25 @@ export default function Question (props){
       event.preventDefault()
       const formEl = event.currentTarget
       const formData = new FormData(formEl)
-      setIsSubmitted(true)
+      props.setIsSubmitted(true)
       props.setUserAnswers(Object.fromEntries(formData.entries()))
       // console.log(props.userAnswers)
-      formEl.reset()
+      // formEl.reset()
   }
+
+  function resetQuiz() {
+    // 1. Tell the parent to clear the answers
+    props.setUserAnswers({}); 
+
+    console.log('Quiz reseting')
+    
+    // 2. Set submitted to false
+    props.setIsSubmitted(false);
+    
+    // 3. (Optional) If you want new random positions for answers, 
+    // you would need a setOptionsArr state setter, but for now:
+    // This will at least clear the UI.
+}
 
 
    // useEffect(()=>{
@@ -73,7 +87,7 @@ export default function Question (props){
                {shuffledOption.map((ans, index)=>{
                const numQuestAttempted = Object.keys(props.userAnswers).length
 
-               let className = ''
+               let className = []
 
                // console.log(props.userAnswers)
                // console.log(props.userAnswers[`question-${i+1}`]) 
@@ -84,12 +98,12 @@ export default function Question (props){
                      if(ans === props.userAnswers[`question-${i+1}`]){
                         // className += 'wrong' 
                         if(props.userAnswers[`question-${i+1}`] === data[i].correct_answer){
-                           className += ' correct' 
+                           className.push('correct')
                            numOfCorrect+=1
 
                            // console.log('Correct class added', `Correct answer=:${numOfCorrect}`)
                         }else{
-                           className+=' wrong'
+                           className.push("wrong")
                         }
                      }
                         
@@ -98,15 +112,15 @@ export default function Question (props){
 
                   }else{
                      console.log(`None of the question attempted`)
-                     className = ''
+                     // className = ''
                   }
-                  if(isSubmitted){
-                     className += ' disabled'
+                  if(props.isSubmitted){
+                     className.push("disabled")
                   }
                   
 
                   return(
-                     <label className={className}>
+                     <label className={className.join(' ')}>
                         <input value ={ans} type="radio" name={`question-${i+1}`}/>
                         {ans}
                      </label>
@@ -117,7 +131,6 @@ export default function Question (props){
       }
    )
 
-   // console.log(fieldHtml)
   
   return (
     <section>
@@ -127,13 +140,24 @@ export default function Question (props){
 
          <p 
             className="final-score"
-            style={{ visibility: isSubmitted ? 'visible' : 'hidden' }}
+            style={{ visibility: props.isSubmitted ? 'visible' : 'hidden' }}
             >
             Great effort! You got {numOfCorrect}/{data.length} questions right.
          </p>
 
-         {isSubmitted ? <button type ='button'className='submit-btn'>Play Again</button> : <button type="submit" className='submit-btn'>Check Answer</button>}
-        
+         {props.isSubmitted ? (
+            <button 
+               type='button' 
+               className='submit-btn' 
+               onClick={props.playAgain}
+            >
+               Play Again
+            </button>
+         ) : (
+            <button type="submit" className='submit-btn'>
+               Check Answer
+            </button>
+         )}
         
       </form>
     </section>

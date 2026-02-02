@@ -197,7 +197,7 @@ label:has(input:checked) {
 }
 
 label.wrong{
-  background-color: #F8BCBC;
+  background-color: #F8BCBC !important;
   color: #293264;
   border: none;
   opacity: 1;
@@ -205,7 +205,7 @@ label.wrong{
 }
 
 label.correct{
-  background-color: #94D7A2;
+  background-color: #94D7A2 !important;
   color: #293264;
   border: none;
   opacity: 1;

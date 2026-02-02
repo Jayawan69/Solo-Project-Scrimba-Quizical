@@ -13,14 +13,23 @@ export default function App(){
 
    const [frontPage, setFrontPage] = useState(false)
    const [userAnswers, setUserAnswers] = useState({})
+   const [isSubmitted, setIsSubmitted] = useState(false)
 
-   console.log(userAnswers)
+   const [gameId, setGameId] = useState(0);
+
+   console.log(userAnswers, 'Its re-rendering')
 
    function startQuizBtn(){
       setFrontPage(prev=>!prev)
    }
 
    let htmlToReturn = ''
+
+   function playAgain() {
+    setGameId(prev => prev + 1);
+    setUserAnswers({});
+    setIsSubmitted(false);
+  }
 
    // useEffect(() => {
    // fetch('https://opentdb.com/api.php?amount=10')
@@ -39,7 +48,14 @@ export default function App(){
    }else{
       htmlToReturn = 
          <main>
-            <Question userAnswers={userAnswers} setUserAnswers={setUserAnswers} />
+            <Question 
+               key={gameId}
+               userAnswers={userAnswers} 
+               setUserAnswers={setUserAnswers} 
+               isSubmitted={isSubmitted} 
+               setIsSubmitted={setIsSubmitted}
+               playAgain={playAgain}
+            />
             <MainPage setFrontPage={setFrontPage}/>
          </main>
    }
