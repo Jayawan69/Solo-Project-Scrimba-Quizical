@@ -83,18 +83,38 @@
 
 export default question */
 
+import he from 'he';
+
 export async function getQuizData() {
   try {
-    const response = await fetch("https://opentdb.com/api.php?amount=10&type=multiple");
-    if (!response.ok) throw new Error("Failed to fetch");
-
-    console.log("FETCH TRIGGERED!");
+    const response = await fetch("https://opentdb.com/api.php?amount=5");
     
+    if (!response.ok) {
+        if (response.status === 429) {
+            console.warn("Rate limit hit, wait a few seconds...");
+        }
+        throw new Error("Network response was not ok");
+    }
+
     const result = await response.json();
-    return result.results; // This is the array of 10 questions
-    console.log(result);
+
+    // Transform the data immediately
+    const cleanData = result.results.map(item => {
+      return {
+        ...item,
+        // Decode the question text
+        question: he.decode(item.question),
+        // Decode the correct answer
+        correct_answer: he.decode(item.correct_answer),
+        // Decode every incorrect answer in the array
+        incorrect_answers: item.incorrect_answers.map(ans => he.decode(ans))
+      };
+    });
+
+    return cleanData;
+    
   } catch (error) {
     console.error("Error loading quiz:", error);
-    return []; 
+    return [];
   }
 }
