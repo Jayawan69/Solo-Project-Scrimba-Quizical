@@ -11,7 +11,7 @@ import Question from './Components/Question'
 
 export default function App(){
 
-   const [frontPage, setFrontPage] = useState(false)
+   const [frontPage, setFrontPage] = useState(true)
    const [userAnswers, setUserAnswers] = useState({})
    const [isSubmitted, setIsSubmitted] = useState(false)
 
