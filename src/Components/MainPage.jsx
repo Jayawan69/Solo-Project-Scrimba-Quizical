@@ -22,7 +22,7 @@ export default function MainPage(props){
         <section > {/* this is for background images */}
           <img src={yellowBallon} className='top-yellow-blob' alt="yellow blob" />
           <img src={yellowBallon} className='bot-yellow-blob' alt="yellow blob" />
-          <button onClick={handleClick}>Want to get back?</button>
+          <button className='back-btn' onClick={handleClick}>Want to get back?</button>
         </section>
 
         <section>

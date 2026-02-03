@@ -175,6 +175,13 @@ label{
   /* width: 100%; */
 }
 
+.back-btn{
+  border: none;
+  padding: 10px 20px;
+  color: #F5F7FB;
+  background-color: #4D5B9E;
+  border-radius: 5px;
+}
 
 .submit-btn{
   padding: 15px 30px;
